@@ -38,16 +38,16 @@ torch.backends.cudnn.benchmark = True
 global_step = 0
 
 
-def main(config, model):
-    """Assume Single Node Multi GPUs Training Only"""
-    assert torch.cuda.is_available(), "CPU training is not allowed."
+def main():
+  """Assume Single Node Multi GPUs Training Only"""
+  assert torch.cuda.is_available(), "CPU training is not allowed."
 
-    n_gpus = torch.cuda.device_count()
-    os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '8000'
+  n_gpus = torch.cuda.device_count()
+  os.environ['MASTER_ADDR'] = 'localhost'
+  os.environ['MASTER_PORT'] = '8000'
 
-    hps = utils.get_hparams(config, model)
-    mp.spawn(run, nprocs=n_gpus, args=(n_gpus, hps,))
+  hps = utils.get_hparams()
+  mp.spawn(run, nprocs=n_gpus, args=(n_gpus, hps,))
 
 
 def run(rank, n_gpus, hps):
